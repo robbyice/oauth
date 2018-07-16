@@ -1,8 +1,11 @@
+#server:
+#  port: 8081
 
-
-server:
-  port: 8081
+logging:
+  level:
+    org:
+      thymeleaf: TRACE
 
 spring:
   profiles:
-    active: basic
+    active: manual

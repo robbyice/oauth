@@ -17,6 +17,8 @@ import org.springframework.security.oauth2.client.token.grant.code.Authorization
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.web.filter.CompositeFilter;
 
 import javax.servlet.Filter;
@@ -24,10 +26,10 @@ import javax.servlet.Filter;
 import static java.util.Arrays.asList;
 
 @Configuration
-//@EnableOAuth2Sso
+//@EnableOAuth2Sso -> this is what we're setting up oursevles, effectively
 @EnableOAuth2Client
 @Profile("manual")
-public class ManualSecurityConfig extends WebSecurityConfigurerAdapter {
+public class ManualSingleProviderSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     OAuth2ClientContext oAuth2ClientContext;
@@ -52,13 +54,13 @@ public class ManualSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                     .logoutSuccessUrl("/")
                     .permitAll()
-//            .and()
-//                .csrf()
-//                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .and()
+                .csrf()
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             .and()
                 //add our oauth2clientauthprocessingfilter before security auth filters start (basicauth is early in chain?)
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class)
-                //required to handle redirects during oauth flow, registered automatically by @enableoauth2sso but required w/ direct setup
+                //required to handle redirects during oauth flow, registered automatically by @enableoauth2sso but required w/ this more manual setup
                 .addFilterBefore(oAuth2ClientContextFilter, SecurityContextPersistenceFilter.class);
         //@formatter:on
     }

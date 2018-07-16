@@ -1,5 +1,5 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -15,13 +15,13 @@
 </head>
 <body>
 <h1>Demo</h1>
-<div class="container unauthenticated">
+<div th:if="${mode=='manual'}" class="container unauthenticated">
     Manual (Facebook): <a href="/login/facebook">click here</a>
-</div>
-<div class="container unauthenticated">
+</div >
+<div th:if="${mode=='manual'}" class="container unauthenticated">
     Manual (Github): <a href="/login/github">click here</a>
 </div>
-<div class="container unauthenticated">
+<div th:if="${mode=='basic'}" class="container unauthenticated">
     Basic Setup: <a href="/login">click here</a>
 </div>
 <div class="container authenticated" style="display:none">
@@ -31,19 +31,19 @@
     </div>
 </div>
 <script type="text/javascript">
-    // $.ajaxSetup({
-    //     beforeSend : function(xhr, settings) {
-    //         if (settings.type == 'POST' || settings.type == 'PUT'
-    //             || settings.type == 'DELETE') {
-    //             if (!(/^http:.*/.test(settings.url) || /^https:.*/
-    //                 .test(settings.url))) {
-    //                 // Only send the token to relative URLs i.e. locally.
-    //                 xhr.setRequestHeader("X-XSRF-TOKEN",
-    //                     Cookies.get('XSRF-TOKEN'));
-    //             }
-    //         }
-    //     }
-    // });
+     $.ajaxSetup({
+         beforeSend : function(xhr, settings) {
+             if (settings.type == 'POST' || settings.type == 'PUT'
+                 || settings.type == 'DELETE') {
+                 if (!(/^http:.*/.test(settings.url) || /^https:.*/
+                     .test(settings.url))) {
+                     // Only send the token to relative URLs i.e. locally.
+                     xhr.setRequestHeader("X-XSRF-TOKEN",
+                         Cookies.get('XSRF-TOKEN'));
+                 }
+             }
+         }
+     });
 
     var logout = function () {
         $.post("/logout", function () {
